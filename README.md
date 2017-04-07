@@ -1,8 +1,8 @@
-#Galaxy Tool Maker
+# Galaxy Tool Maker
 
 A Java program to generate the tool XML wrappers for Galaxy.  The tool first queries a Service Manager instance for a list of services, then queries each service to obtain the service's metadata. Using this information it is possible to generate XML wrappers for each service given the appropriate template.
 
-##Usage
+## Usage
 
 ```
 java -jar tool-wrapper-x.y.z.jar [OPTIONS] <template file>
@@ -68,7 +68,7 @@ The following variables are available to be used in a template:
 
 The *gridId*, *serviceId*, *serviceName*, and *serviceDescription* values are obtained from the JSON document returned by the Service Manager.  For example, see [http://api.lappsgrid.org/services/brandeis](http://api.lappsgrid.org/services/brandeis). The *inputFormats*, *outputFormat*, *requires*, and *produces* values are obtains from the metadata retrieved from each service.  For example see [http://api.lappsgrid.org/metadata?id=anc:gate.tokenizer_2.2.0](http://api.lappsgrid.org/metadata?id=anc:gate.tokenizer_2.2.0).
 
-###Engines
+### Engines
 
 Users have the option of using either the [groovy.text.SimpleTemplateEngine](http://docs.groovy-lang.org/2.4.10/html/documentation/template-engines.html#_simpletemplateengine) (xml) or [groovy.xml.MarkupBuilder](http://docs.groovy-lang.org/2.4.10/html/documentation/template-engines.html#_the_markuptemplateengine) (groovy) template engines to generate the output files.  
 
