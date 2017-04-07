@@ -1,0 +1,28 @@
+<tool id="${gridId}_$serviceId" name="$serviceName" version="$toolVersion">
+    <description>$serviceDescription</description>
+    <command>lsd \$__tool_directory__/invoke.ld $serviceId \$input \$output</command>
+    <inputs>
+        <param name="input" type="data" format="$inputFormats"/>
+    </inputs>
+    <output>
+        <data name="output" format="$outputFormat"/>
+    </output>
+    <help><![CDATA[
+HELP
+====
+<%= serviceDescription %>
+<% if (requires && requires.size() > 0) { %>
+Required Annotations
+--------------------
+<% requires.each { %>
+* $it
+<% } } %>
+<% if (produces && produces.size() > 0) { %>
+Generated Annotations
+---------------------
+<% produces.each { %>
+* $it
+<%}}%>
+]]>
+    </help>
+</tool>
