@@ -129,7 +129,7 @@ class ToolWrapper {
 
 	static void main(String[] args) {
         def cli = new CliBuilder()
-        cli.usage = "java -jar tool-wrapper-${Version.version}.jar -s (vassar|brandeis) [-e (xml|groovy)]  [-q <query>] [-o <output directory>] <template>"
+        cli.usage = "java -jar tool-wrapper-${Version.version}.jar -s (vassar|brandeis) [-e (jsp|groovy)]  [-q <query>] [-o <output directory>] <template>"
         cli.header = "\nGenerates tool wrapper XML files for Galaxy.\n"
         cli.footer = '''
 If an output director is not specified the output will be written to STDOUT.
@@ -167,14 +167,14 @@ Copyright 2017 The Language Application Grid
             return
         }
         ToolWrapper app = new ToolWrapper()
-        if (params.e == 'xml') {
+        if (params.e == 'jsp') {
             app.useGroovy = false
         }
         else if (params.e == 'groovy') {
             app.useGroovy = true
         }
         else {
-            println "ERROR: Invalid engine type.  Must be one of 'xml' or 'groovy'."
+            println "ERROR: Invalid engine type.  Must be one of 'jsp' or 'groovy'."
             return
         }
 

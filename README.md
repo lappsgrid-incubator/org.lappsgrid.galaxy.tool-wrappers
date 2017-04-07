@@ -5,22 +5,24 @@ A Java program to generate the tool XML wrappers for Galaxy.  The tool first que
 ## Usage
 
 ```
-java -jar tool-wrapper-x.y.z.jar [OPTIONS] <template file>
+java -jar tool-wrapper-x.y.z.jar -s [vassar|brandeis] <OPTIONS> /path/to/template/file
 ```
 
 where `x.y.z` is the current version number.
 
+### Required Parameters
+
+* -s, --server<br/>The service manager instance that will be queried for available services. Must be one of *vassar* or *brandeis*. 
+
 ### Options
 
-* -s, --server (required)<br/>The service manager instance that will be queried for available services. Must be one of *vassar* or *brandeis*. 
-* -e, --engine<br/>The template engine to use. Must be one of *xml* or *groovy*. If not specified the *groovy* template engine will be used.
+* -e, --engine<br/>The template engine to use. Must be one of *jsp* or *groovy*. If not specified the *groovy* template engine will be used.
 * -o, --output<br/>The directory where the generated XML files will be written.  If omitted the XML output will be written to STDOUT.
 * -q, --query<br/>A sequece of name/value pairs that will be used as search criteria when querying the service manager.
-* -v, --version<br/>
-Displays the current application version string.
+* -v, --version<br/>Displays the current application version string.
 * -h, --help<br/>Displays a simple usage message.
 
-When saving the tool XML to the `--output` directory then filename will be derived by adding a `.xml` suffix to the `serviceId` of service.
+When saving the tool XML to the `--output` directory the filename will be derived by adding an `.xml` suffix to the `serviceId` (minus the gridId prefix) of the service. For example the XML for a service with the ID `foo:sample.service_1.0.0` will be saved to a file named `sample.service_1.0.0.xml`
 
 The `--query` string is a whitespace delimited sequence of name=value pairs where the *name* is one of the values:
 * active
@@ -35,19 +37,15 @@ The `--query` string is a whitespace delimited sequence of name=value pairs wher
 * serviceTypeDomain
 * updatedDate
 
-**Note**<br/>These are the fields of the JSON document returned by the service manager. For example, see [http://api.lappsgrid.org/services/brandeis](http://api.lappsgrid.org/services/brandeis). The query matches if the the field value contains *value* as a substring.  Matches are case-insensitive.
+**Note** These are the fields of the JSON document returned by the service manager. For example, see [http://api.lappsgrid.org/services/brandeis](http://api.lappsgrid.org/services/brandeis). The query matches if the the field value contains *value* as a substring.  Matches are case-insensitive.
 
 **Example**
 
-Generate wrappers for version 2.2.0 GATE services on the Vassar node.
+The query to find all GATE services version 2.2.0:
 
-```bash
-java -jar tool-wrapper-x.y.z.jar -s vassar -q 'serviceName=gate serviceId=2.2.0' ...
 ```
-The tool-wrapper program with then call [http://api.lappsgrid.org/services/vassar?serviceName=gate&serviceId=2.2.0](http://api.lappsgrid.org/services/vassar?serviceName=gate&serviceId=2.2.0) to obtain the JSON document from the Vassar service manager with the list of GATE services.
-
-**Note**<br/>
-Since the *serviceName* and *serviceId* both contain the string 'gate' and the string '2.2.0' on the Vassar node we could have specified the above query as `-q serviceName=2.2.0 serviceId=gate` and achieved the same result.
+-q 'serviceName=gate serviceId=2.2.0' ...
+```
 
 ### Bindings
 
@@ -70,7 +68,7 @@ The *gridId*, *serviceId*, *serviceName*, and *serviceDescription* values are ob
 
 ### Engines
 
-Users have the option of using either the [groovy.text.SimpleTemplateEngine](http://docs.groovy-lang.org/2.4.10/html/documentation/template-engines.html#_simpletemplateengine) (xml) or [groovy.xml.MarkupBuilder](http://docs.groovy-lang.org/2.4.10/html/documentation/template-engines.html#_the_markuptemplateengine) (groovy) template engines to generate the output files.  
+Users have the option of using either the [groovy.text.SimpleTemplateEngine](http://docs.groovy-lang.org/2.4.10/html/documentation/template-engines.html#_simpletemplateengine) (jsp) or [groovy.xml.MarkupBuilder](http://docs.groovy-lang.org/2.4.10/html/documentation/template-engines.html#_the_markuptemplateengine) (groovy) template engines to generate the output files.  
 
 The engine used will determine the syntax of the template files.  The `groovy` template engine uses a Groovy DSL syntax for the template.
 
@@ -81,7 +79,7 @@ tool(id:$serviceId, name:$serviceName, version:$toolVersion) {
 }
 ```
 
-While the `xml` template engine uses a PHP/XML like syntax for the template:
+While the `jsp` template engine uses a JSP (Java Server Pages) like syntax for the template:
 ```
 <tool id="$serviceId" name="$serviceName" version="$toolVersion">
     <description><%= serviceDescription %></description>
@@ -92,5 +90,5 @@ While the `xml` template engine uses a PHP/XML like syntax for the template:
 </tool>
 ```
 
-In both syntaxes variable substitution is done with `$variable` while in the xml syntax `<%= variable %>` can also be used.  See the [gate-template.groovy](gate-template.groovy) and [gate-template.xml](gate-template.xml) files for complete examples using flow of control and conditionals.
+In both syntaxes variable substitution is done with `$variable` while in the JSP syntax `<%= variable %>` can also be used.  See the [gate-template.groovy](gate-template.groovy) and [gate-template.xml](gate-template.xml) files for complete examples using flow of control and conditionals.
 
