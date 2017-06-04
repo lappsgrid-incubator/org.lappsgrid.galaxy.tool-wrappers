@@ -4,13 +4,13 @@
     <inputs>
         <param name="input" type="data" format="$inputFormats"/>
     </inputs>
-    <output>
+    <outputs>
         <data name="output" format="$outputFormat"/>
-    </output>
+    </outputs>
     <help><![CDATA[
 HELP
 ====
-<%= serviceDescription %>
+<% print serviceDescription %>
 <% if (requires && requires.size() > 0) { %>
 Required Annotations
 --------------------

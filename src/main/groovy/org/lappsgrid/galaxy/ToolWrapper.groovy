@@ -1,5 +1,6 @@
 package org.lappsgrid.galaxy
 
+import groovyx.net.http.HttpBuilder
 import org.anc.template.*
 import org.lappsgrid.client.ServiceClient
 import groovy.json.*
@@ -64,11 +65,16 @@ class ToolWrapper {
             engine = new HtmlTemplateEngine(template)
         }
 
-        String servicesJson = new URL(query).text
-		def parser = new JsonSlurper()
-		def object = parser.parseText(servicesJson)
+        Map response = HttpBuilder.configure {
+            request.uri = query
+            request.headers['Accept'] = 'application/json'
+        }.get()
 
-		object.elements.each { e ->
+//        String servicesJson = new URL(query).text
+		def parser = new JsonSlurper()
+//		def response = parser.parseText(servicesJson)
+
+		response.elements.each { e ->
 			Map binding = [:]
             def ids = e.serviceId.tokenize(':')
             binding.gridId = ids[0]
@@ -170,7 +176,7 @@ Copyright 2017 The Language Application Grid
         if (params.e == 'jsp') {
             app.useGroovy = false
         }
-        else if (params.e == 'groovy') {
+        else if (params.e == null || params.e == 'groovy') {
             app.useGroovy = true
         }
         else {
